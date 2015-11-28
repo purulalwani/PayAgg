@@ -230,7 +230,7 @@ router.get('/triggerPayment', function(req, res, next) {
     //console.log("retirve all posts - auth: " + auth);
               
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:'<html><a href="/intiPayment?type=CreditCard" value="Credit Card" /> <br/><a href="/intiPayment?type=Paypal" value="Paypal" />'});
+              res.json({txnid: 12345, html:'<html><body><a href="/intiPayment?type=CreditCard">Credit Card</a><br><a href="/intiPayment?type=Paypal">Paypal</a></body></html>'});
               
 });
 
