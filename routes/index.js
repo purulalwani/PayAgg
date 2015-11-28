@@ -1,4 +1,6 @@
 var express = require('express');
+var http=require('http');
+var request=require('request');
 var router = express.Router();
 
 /* GET home page. */
@@ -249,8 +251,20 @@ res.end('<html><form action="http://payagg-purulalwani.rhcloud.com/paypalPayment
 });
 
 router.post('/creditCardPayment',function(req,res,next){
-// for credit card payment
-res.end('Success');
+request.post({
+  headers: { 'Authorization':'Basic QVVCajZ0bG9SZTdqTk5wa3ItQWU3VDU4TlBnbHQ5RGtiX2plTk9laG1sWlVQVGRYUDluTzd6VmJSRTBUelc3Z2NxYUZhTVJmdDlXYjg3d3c6RUpIdnRBcW5UTXhFb3BiS094MnB0NWVBYlprd01Sb1lQTU1ZNF83REtlQmI1THdXQU5UVW80Nm5YV2ZUaGVqT1NlRlJUdWF4bEMtVmFUR2c=',
+    Accept: 'application/json',
+'Accept-Language':'en_US',
+'Content-Type': 'application/x-www-form-urlencoded'},
+  url:'https://api.sandbox.paypal.com/v1/oauth2/token',
+  body:'grant_type=client_credentials'
+}, 
+function(error, response, body){
+  console.log(body);
+  res.json(body);
+});
+
+
 });
 
 
