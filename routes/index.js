@@ -230,7 +230,7 @@ router.get('/triggerPayment', function(req, res, next) {
     //console.log("retirve all posts - auth: " + auth);
               
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:'<html><body><a href="/intiPayment?type=CreditCard">Credit Card</a><br><a href="/intiPayment?type=Paypal">Paypal</a></body></html>'});
+              res.json({txnid: 12345, html:'<html><body><a href="http://payagg1-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg1-purulalwani.rhcloud.com/intiPayment?type=Paypal">Paypal</a></body></html>'});
               
 });
 
@@ -238,11 +238,11 @@ router.get('/intiPayment',function(req,res,next){
 var type=req.query.type;
 if(type=="CreditCard")
 {
-res.end('<html><form action="/creditCardPayment" method="post"><table><tr><td>Name On Card<br></td><td><input type="text" id="name"></td></tr><tr><td>Card Number</td><td><input type="text" id="number"></td></tr><tr><td>Expiry Date</td><td><input type="text" id="date"></td></tr><tr><td>CVV</td><td><input type="text" id="cvv"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');
+res.end('<html><form action="http://payagg1-purulalwani.rhcloud.com/creditCardPayment" method="post"><table><tr><td>Name On Card<br></td><td><input type="text" id="name"></td></tr><tr><td>Card Number</td><td><input type="text" id="number"></td></tr><tr><td>Expiry Date</td><td><input type="text" id="date"></td></tr><tr><td>CVV</td><td><input type="text" id="cvv"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');
 }
 else
 {
-res.end('<html><form action="/paypalPayment" method="post"><table><tr><td>Username</td><td><input type="text" id="username"></td></tr><tr><td>Password</td><td><input type="password" id="password"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');  
+res.end('<html><form action="http://payagg1-purulalwani.rhcloud.com/paypalPayment" method="post"><table><tr><td>Username</td><td><input type="text" id="username"></td></tr><tr><td>Password</td><td><input type="password" id="password"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');  
 }
 
 });
