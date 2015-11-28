@@ -230,7 +230,7 @@ router.get('/triggerPayment', function(req, res, next) {
     //console.log("retirve all posts - auth: " + auth);
               
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg1-purulalwani.rhcloud.com/intiPayment?type=Paypal">Paypal</a></body></html>'});
+              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=Paypal">Paypal</a></body></html>'});
               
 });
 
