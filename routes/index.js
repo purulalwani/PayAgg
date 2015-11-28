@@ -234,6 +234,27 @@ router.get('/triggerPayment', function(req, res, next) {
               
 });
 
+router.get('/intiPayment',function(req,res,next){
+var type=req.query.type;
+if(type=="CreditCard")
+{
+res.end('<html><form action="/creditCardPayment" method="post"><table><tr><td>Name On Card<br></td><td><input type="text" id="name"></td></tr><tr><td>Card Number</td><td><input type="text" id="number"></td></tr><tr><td>Expiry Date</td><td><input type="text" id="date"></td></tr><tr><td>CVV</td><td><input type="text" id="cvv"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');
+}
+else
+{
+res.end('<html><form action="/paypalPayment" method="post"><table><tr><td>Username</td><td><input type="text" id="username"></td></tr><tr><td>Password</td><td><input type="password" id="password"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');  
+}
+
+});
+
+router.post('/creditCardPayment',function(req,res,next){
+// for credit card payment
+res.end('Success');
+});
 
 
+router.post('/paypalPayment',function(req,res,next){
+  // for paypal payment
+  res.end('Success');
+});
 module.exports = router;
