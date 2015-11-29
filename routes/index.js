@@ -245,31 +245,30 @@ router.get('/items', auth, function(req, res, next) {
 router.get('/triggerPayment', function(req, res, next) {
               var amt=req.query.amount;
               var merchantId=req.query.payAgg_MID;
-              console.log("M : "+merchantId);
+              console.log("M : "+amt);
 
               var responseData="";
-              Preference.findById(merchantId,function (err, data){
-                console.log("gfsd"+data);
+              Preference.findOne({merchantId:merchantId},function (err, data){
               if (data!=null)
               {    
                 responseData='<html><body>';
                   for(var i=0;i<data.paymentMethods.length;i++)
                   {
-                    if(data.paymentMethods[i].key=="PP")
+                    if(data.paymentMethods[i].key=="Paypal")
                     {
-                      responseData+='<a href="http://payagg-purulalwani.rhcloud.com/paypalPayment?amt="'+amt+'" target="_blank">Paypal</a><br>'
+                      responseData+='<a href="http://payagg-purulalwani.rhcloud.com/paypalPayment?amt='+amt+' " target="_blank">Paypal</a><br>'
                     }
                     else
                     {
                       responseData+='<a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type='+data.paymentMethods[i].key+'" target="_blank">'+data.paymentMethods[i].value+'</a><br>';
                     }
-                      console.log("responseData :"+responseData);
                   }
                   responseData+='</body></html>';
+                    res.json({txnid: 12345, html:responseData});
               } 
                            });
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:responseData});
+            
               
 });
 

@@ -155,6 +155,10 @@ app.controller('MainCtrl', [
         }, {
             key: "Credit Card",
             value: 'Credit Card'
+        },
+        {
+            key: "PayTM",
+            value: 'PayTM'
         }];
         $scope.selection = [];
 
