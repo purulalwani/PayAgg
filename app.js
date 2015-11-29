@@ -69,6 +69,7 @@ var Post = require('./models/Posts');
 var Comment = require('./models/Comments');
 var User = require('./models/Users');
 var Item = require('./models/Items');
+var Preference = require('./models/PaymentPreference');
 require('./config/passport');
 
 
