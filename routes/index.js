@@ -230,9 +230,9 @@ router.get('/items', auth, function(req, res, next) {
 
 router.get('/triggerPayment', function(req, res, next) {
     //console.log("retirve all posts - auth: " + auth);
-              
+              var amt=req.query.amount;
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=Paypal">Paypal</a></body></html>'});
+              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg-purulalwani.rhcloud.com/paypalPayment?amt="'+amt+'">Paypal</a></body></html>'});
               
 });
 
@@ -243,33 +243,64 @@ if(type=="CreditCard")
 {
 res.end('<html><form action="http://payagg-purulalwani.rhcloud.com/creditCardPayment" method="post"><table><tr><td>Name On Card<br></td><td><input type="text" id="name"></td></tr><tr><td>Card Number</td><td><input type="text" id="number"></td></tr><tr><td>Expiry Date</td><td><input type="text" id="date"></td></tr><tr><td>CVV</td><td><input type="text" id="cvv"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');
 }
-else
-{
-res.end('<html><form action="http://payagg-purulalwani.rhcloud.com/paypalPayment" method="post"><table><tr><td>Username</td><td><input type="text" id="username"></td></tr><tr><td>Password</td><td><input type="password" id="password"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');  
-}
+// else
+// {
+// res.end('<html><form action="http://payagg-purulalwani.rhcloud.com/paypalPayment" method="post"><table><tr><td>Username</td><td><input type="text" id="username"></td></tr><tr><td>Password</td><td><input type="password" id="password"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');  
+// }
 
 });
 
 router.post('/creditCardPayment',function(req,res,next){
-request.post({
-  headers: { 'Authorization':'Basic QVVCajZ0bG9SZTdqTk5wa3ItQWU3VDU4TlBnbHQ5RGtiX2plTk9laG1sWlVQVGRYUDluTzd6VmJSRTBUelc3Z2NxYUZhTVJmdDlXYjg3d3c6RUpIdnRBcW5UTXhFb3BiS094MnB0NWVBYlprd01Sb1lQTU1ZNF83REtlQmI1THdXQU5UVW80Nm5YV2ZUaGVqT1NlRlJUdWF4bEMtVmFUR2c=',
-    Accept: 'application/json',
-'Accept-Language':'en_US',
-'Content-Type': 'application/x-www-form-urlencoded'},
-  url:'https://api.sandbox.paypal.com/v1/oauth2/token',
-  body:'grant_type=client_credentials'
-}, 
-function(error, response, body){
-  console.log(body);
-  res.json(body);
-});
+
+
 
 
 });
 
 
 router.post('/paypalPayment',function(req,res,next){
-  // for paypal payment
-  res.end('Success');
+  var file="";
+  request.get('https://api-3t.sandbox.paypal.com/nvp?USER=purulalwani-facilitator_api1.gmail.com&PWD=JN87FYAKTW69FHQT&SIGNATURE=A8U4kN1ozZa4NoSGUvTXiP3pGt8FAevAp1IrIeFt0XbsQUf70iPlImPv&METHOD=SetExpressCheckout&VERSION=98&PAYMENTREQUEST_0_AMT=2&PAYMENTREQUEST_0_CURRENCYCODE=USD&PAYMENTREQUEST_0_PAYMENTACTION=SALE&cancelUrl=http://www.example.com/cancel.html&returnUrl=http://payagg-purulalwani.rhcloud.com/executePayment?amt=2',function(err,response,body){
+    console.log("Init Pay"+ body);
+    var info= body.split('&')[0].split('=')[1];
+    console.log(body);
+    var token=decodeURIComponent(info);
+    console.log("token : "+token);
+    var url='https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='+token;
+    console.log("URL : "+url);
+    var file='<html><head><script>window.location.href="'+url+'"</script></head></html>';
+    res.end(file);
+ //    request.get(url,function(err,resp,body1){
+    
+      
+ //      res.writeHead(200, {
+ //   'Content-Type': 'text/html', 
+ //   'Set-Cookie': '604800',
+ //   'Connection': 'keep-alive',
+ //   'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
+ // });
+ //    //  console.log("body : "+body1);
+ //      res.end(body1);
+ //  //    console.log("body : "+body);
+ //    });
+ 
+    // request.get('https://api-3t.sandbox.paypal.com/nvp?METHOD=GetExpressCheckoutDetails&TOKEN=EC%2d8BA611440L054983X&USER=purulalwani-facilitator_api1.gmail.com&PWD=JN87FYAKTW69FHQT&SIGNATURE=A8U4kN1ozZa4NoSGUvTXiP3pGt8FAevAp1IrIeFt0XbsQUf70iPlImPv&VERSION=98',function(err,res,body){
+    //     //console.log("Checkout details " +body);
+    // });
+
+  });
+
+ 
+});
+
+router.get('/executePayment',function(req,res,next){
+var amt=req.query.amt;
+var payerId=req.query.PayerID;
+var token=req.query.token;
+var url='https://api-3t.sandbox.paypal.com/nvp?METHOD=DoExpressCheckoutPayment&TOKEN='+token+'&USER=purulalwani-facilitator_api1.gmail.com&PWD=JN87FYAKTW69FHQT&SIGNATURE=A8U4kN1ozZa4NoSGUvTXiP3pGt8FAevAp1IrIeFt0XbsQUf70iPlImPv&VERSION=98&PAYERID='+payerId+'&PAYMENTREQUEST_0_AMT='+amt;
+request.get(url,function(err,resp,body){
+  res.end('success');
+});
+
 });
 module.exports = router;
