@@ -269,6 +269,7 @@ router.get('/paypalPayment',function(req,res,next){
     var url='https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='+token;
     console.log("URL : "+url);
     var file='<html><head><script>window.location.href="'+url+'"</script></head></html>';
+    res.setHeader('content-type', 'text/html');
     res.end(file);
  //    request.get(url,function(err,resp,body1){
     
