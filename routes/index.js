@@ -42,20 +42,16 @@ router.post('/register', function(req, res, next){
             return res.status(400).json({message: 'Please fill out all fields'});
             }
             
-            console.log("register: " + req.body);
             
             var user = new User();
             
-            console.log("register - username: " + req.body.username);
             user.username = req.body.username;
+             user.merchantName = req.body.merchantName;
+              user.mobileNumber = req.body.mobileNumber;
             
-            
-            console.log("register - password: " + req.body.password);
-            console.log("util: " + util);
-                        console.log("util - export: " + util.exports);
             util.setPassword(user, req.body.password)
             
-            console.log("register - saving");
+           
             user.save(function (err){
                       if(err){ return next(err); }
                       
@@ -266,7 +262,8 @@ var type=req.query.type;
 res.setHeader('content-type', 'text/html');
 if(type=="CreditCard")
 {
-res.end('<html><form action="http://payagg-purulalwani.rhcloud.com/creditCardPayment" method="post"><table><tr><td>Name On Card<br></td><td><input type="text" id="name"></td></tr><tr><td>Card Number</td><td><input type="text" id="number"></td></tr><tr><td>Expiry Date</td><td><input type="text" id="date"></td></tr><tr><td>CVV</td><td><input type="text" id="cvv"></td></tr><tr><td></td><td><input type="submit" value="PAY"></td></tr></table></form></html>');
+
+res.end('<html><link href="/javascripts/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet"> <div class="row"> <div class="col-md-6 col-md-offset-3"><form action="http://payagg-purulalwani.rhcloud.com/creditCardPayment" method="post"><div class="page-header"><h1>Credit Card</h1> </div><div class="form-group"><Label>Card Number</Label><input type="text" class="form-control" placeholder="Card Number"  required ></input> </div><div class="form-group"> <Label>Expiry Date</Label><input type="text" class="form-control"  placeholder="expiryDate"   required></input></div> <div class="form-group"><Label>CVV</Label> <input type="password" class="form-control" placeholder="CVV"  required></input></div><div class="form-group"><Label>Name On Card</Label><input type="text" name="nameonCard" class="form-control" placeholder="Name on Card" ></input></div><button type="submit" class="btn btn-primary">Submit</button></form></div></div</html>');
 }
 // else
 // {
