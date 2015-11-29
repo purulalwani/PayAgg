@@ -232,7 +232,7 @@ router.get('/triggerPayment', function(req, res, next) {
     //console.log("retirve all posts - auth: " + auth);
               var amt=req.query.amount;
               //console.log("retirve all posts - posts: " + res.json(posts));
-              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard">Credit Card</a><br><a href="http://payagg-purulalwani.rhcloud.com/paypalPayment?amt="'+amt+'">Paypal</a></body></html>'});
+              res.json({txnid: 12345, html:'<html><body><a href="http://payagg-purulalwani.rhcloud.com/intiPayment?type=CreditCard" target="_blank">Credit Card</a><br><a href="http://payagg-purulalwani.rhcloud.com/paypalPayment?amt="'+amt+'" target="_blank">Paypal</a></body></html>'});
               
 });
 
@@ -258,7 +258,7 @@ router.post('/creditCardPayment',function(req,res,next){
 });
 
 
-router.post('/paypalPayment',function(req,res,next){
+router.get('/paypalPayment',function(req,res,next){
   var file="";
   request.get('https://api-3t.sandbox.paypal.com/nvp?USER=purulalwani-facilitator_api1.gmail.com&PWD=JN87FYAKTW69FHQT&SIGNATURE=A8U4kN1ozZa4NoSGUvTXiP3pGt8FAevAp1IrIeFt0XbsQUf70iPlImPv&METHOD=SetExpressCheckout&VERSION=98&PAYMENTREQUEST_0_AMT=2&PAYMENTREQUEST_0_CURRENCYCODE=USD&PAYMENTREQUEST_0_PAYMENTACTION=SALE&cancelUrl=http://www.example.com/cancel.html&returnUrl=http://payagg-purulalwani.rhcloud.com/executePayment?amt=2',function(err,response,body){
     console.log("Init Pay"+ body);
