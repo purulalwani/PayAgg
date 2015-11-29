@@ -42,7 +42,9 @@
                 <form ng-submit="addPost()"
                      ng-show="isLoggedIn()"
                     style="margin-top:30px;">
-                    <h3>Payment Options</h3>
+                    <h3>Payment Options</h3> 
+
+                   <p style="float: right;"> Merchant Id : {{merchantId}} </p>
                     
                     <div class="form-group">
             <label ng-repeat="option in paymentOptions" class="payment-option">

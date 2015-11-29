@@ -85,6 +85,7 @@ router.get('/posts', auth, function(req, res, next) {
                        if (!user) { return next(new Error('can\'t find post')); }
                          Preference.find({ merchantId: user.merchantId }, function (err, data){
                                 if (err) { return next(err); }
+                                 var responseData = {data : data , merchantId : user.merchantId }
                             return res.json(data);
         
                    });

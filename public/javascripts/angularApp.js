@@ -189,6 +189,7 @@ app.controller('MainCtrl', [
                 $scope.error = error;
             }).then(function(data) {
                 $scope.selection = data.data[0] ? data.data[0].paymentMethods : [];
+                $scope.merchantId =  data.data[0] ? data.data[0].merchantId: "";
             });
         $scope.addPost = function() {
            
