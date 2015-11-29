@@ -15,6 +15,10 @@ app.factory('posts', ['$http', 'auth', function($http, auth) {
                 body: 'Great idea but everything is wrong!',
                 upvotes: 0
             }]
+        }],
+        paymentOptions : [{
+            key: 'Paypal',
+            value: 'Paypal'
         }]
     };
     o.getAll = function() {
@@ -27,6 +31,19 @@ app.factory('posts', ['$http', 'auth', function($http, auth) {
             angular.copy(data, o.posts);
         });
     };
+
+    o.getAllPayments = function() {
+        return $http.get('/posts', {
+            headers: {
+                Authorization: 'Bearer ' + auth.getToken()
+            }
+        }).success(function(data) {
+            //alert('data: ' + data);
+            //data =data;
+            angular.copy(data, o.paymentOptions);
+        });
+    };
+
     o.create = function(post) {
         return $http.post('/posts', post, {
             headers: {
@@ -108,6 +125,8 @@ app.factory('auth', ['$http', '$window', function($http, $window) {
             return payload.username;
         }
     };
+
+
     auth.register = function(user) {
         return $http.post('/register', user).success(function(data) {
             auth.saveToken(data.token);
@@ -141,7 +160,15 @@ app.controller('MainCtrl', [
 
         // toggle selection for a given payment options by name
         $scope.toggleSelection = function toggleSelection(option) {
-            var idx = $scope.selection.indexOf(option);
+            if(!$scope.selection){
+                $scope.selection = [];
+            }
+             var idx = -1;
+             angular.forEach($scope.selection, function (value , index){
+                 if(option.key == value.key ){
+                    idx =  index;
+                 }
+            });
 
             // is currently selected
             if (idx > -1) {
@@ -153,18 +180,30 @@ app.controller('MainCtrl', [
                 $scope.selection.push(option);
             }
         };
+
+        posts.getAllPayments().error(function(error) {
+                $scope.error = error;
+            }).then(function(data) {
+                $scope.selection = data.data[0] ? data.data[0].paymentMethods : [];
+            });
         $scope.addPost = function() {
-            if (!$scope.title || $scope.title === '') {
-                return;
-            }
+           
 
             posts.create({
-                title: $scope.title,
-                link: $scope.link,
+                paymentMethods : $scope.selection,
             });
-            $scope.title = '';
-            $scope.link = '';
+           
         };
+
+        $scope.getCheckedValue = function (option){
+            var retUrnValue = false;
+            angular.forEach($scope.selection, function (value){
+                 if(option.key == value.key ){
+                    retUrnValue =  true;
+                 }
+            });
+            return retUrnValue;
+        }
         $scope.incrementUpvotes = function(post) {
             posts.upvote(post);
         };

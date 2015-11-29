@@ -31,7 +31,7 @@
         <!-- Home template start -->
         <script type="text/ng-template" id="/home.html">
                 <div class="page-header">
-                    <h1>Payment Perferences</h1>
+                    <h1>Payment Aggregator</h1>
                 </div>
                 <div ng-hide="isLoggedIn()">
                 <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> .</h3>
@@ -50,7 +50,7 @@
                 type="checkbox"
                 name="selectedOptions[]"
                 value="{{option}}"
-                ng-checked="selection.indexOf(option) > -1"
+                ng-checked="getCheckedValue(option)"
                 ng-click="toggleSelection(option)"
               > {{option.value}}
             </label>
@@ -65,7 +65,7 @@
         <!-- resgister template start -->
         <script type="text/ng-template" id="/register.html">
             <div class="page-header">
-                <h1>Payment Perferences</h1>
+                <h1>Payment Aggregator</h1>
             </div>
 
             <div ng-show="error" class="alert alert-danger row">
@@ -117,7 +117,7 @@
     <!-- login template start -->
     <script type="text/ng-template" id="/login.html">
         <div class="page-header">
-            <h1>Payment Perferences</h1>
+            <h1>Payment Aggregator</h1>
         </div>
 
         <div ng-show="error" class="alert alert-danger row">

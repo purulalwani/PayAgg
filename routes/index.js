@@ -38,6 +38,7 @@ var auth = ejwt({secret: 'SECRET', userProperty: 'payload'});
 //var Comment = mongoose.model('Comment');
 
 router.post('/register', function(req, res, next){
+             console.log(req.body)
             if(!req.body.username || !req.body.password){
             return res.status(400).json({message: 'Please fill out all fields'});
             }
@@ -51,9 +52,12 @@ router.post('/register', function(req, res, next){
             
             util.setPassword(user, req.body.password)
             
+            user.merchantId =  Math.floor(Math.random()*900000) + 100000; 
+
+           
            
             user.save(function (err){
-                      if(err){ return next(err); }
+                      if(err){ console.log(err); return next(err); }
                       
                       return res.json({token: util.generateJWT(user)})
                       });
@@ -76,26 +80,41 @@ router.post('/login', function(req, res, next){
 });
 
 router.get('/posts', auth, function(req, res, next) {
-           //console.log("retirve all posts - auth: " + auth);
-           Post.find(function(err, posts){
-                     if(err){ return next(err); }
-                     
-                     //console.log("retirve all posts - posts: " + res.json(posts));
-                     res.json(posts);
-                     });
+           User.findById(req.payload._id, function (err, user){
+                       if (err) { return next(err); }
+                       if (!user) { return next(new Error('can\'t find post')); }
+                         Preference.find({ merchantId: user.merchantId }, function (err, data){
+                                if (err) { return next(err); }
+                            return res.json(data);
+        
+                   });
+                      
+                       });
 });
 
 router.post('/posts', auth, function(req, res, next) {
-            //var post = new Post(req.body);
-            console.log("req.payload.username: " + req.payload.username);
-            req.body.author = req.payload.username;
-            console.log("req.body.author: " + req.payload.username);
             
-            Post.create(req.body, function(err, post){
-                      if(err){ return next(err); }
+           User.findById(req.payload._id, function (err, user){
+                       if (err) { return next(err); }
+                       if (!user) { return next(new Error('can\'t find post')); }
+                         Preference.remove({ merchantId: user.merchantId }, function (err, data){
+                                if (err) { return next(err); }
+
+                          var perfernce  =  new Preference ();
+                          perfernce.paymentMethods = req.body.paymentMethods;
+                          perfernce.merchantId =  user.merchantId;
+                          perfernce.save(function(err) {
+                            if (err) {
+                              return next(err);
+                            }
+
+                            return res.json(req.body.paymentMethods);
+        
+                         });
+
+                         });
                       
-                      res.json(post);
-                      });
+                       });
             });
 
 router.param('post', function(req, res, next, id) {
@@ -216,17 +235,14 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
 /** URLs for Items */
 
 router.get('/items', auth, function(req, res, next) {
-    //console.log("retirve all posts - auth: " + auth);
     Item.find(function(err, posts){
               if(err){ return next(err); }
               
-              //console.log("retirve all posts - posts: " + res.json(posts));
               res.json(posts);
               });
 });
 
 router.get('/triggerPayment', function(req, res, next) {
-    //console.log("retirve all posts - auth: " + auth);
               var amt=req.query.amount;
               var merchantId=req.query.payAgg_MID;
               console.log("M : "+merchantId);

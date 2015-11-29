@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var PreferenceSchema = new mongoose.Schema({
-                                        merchantName: String,
+                                        merchantId: String,
                                         paymentMethods:[{key:String, value:String}]
                                         });
 
